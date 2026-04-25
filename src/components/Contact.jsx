@@ -1,6 +1,9 @@
 import { FiMail, FiPhone, FiMapPin } from "react-icons/fi";
-import { useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import emailjs from "@emailjs/browser";
+import SectionHeader from "./ui/SectionHeader";
+
+const ContactScene = lazy(() => import("./three/ContactScene"));
 const contactInfo = [
   {
     icon: FiMail,
@@ -43,38 +46,47 @@ const Contact = () => {
 
 
   return (
-    <section id="contact" className="py-20 bg-gray-900">
-      <div className="max-w-4xl mx-auto px-4">
-        <h2 className="text-4xl font-extrabold mb-10 text-white text-center">
-          Get In <span className="text-blue-400">Touch</span>
-        </h2>
-        <div className="grid md:grid-cols-2 gap-10">
-          <div className="flex flex-col gap-6">
-            <h3 className="text-2xl font-bold mb-2 text-white">Let's Talk</h3>
-            {contactInfo.map((info, i) => (
-              <a
-                key={i}
-                href={info.href}
-                className="flex items-center gap-4 bg-gray-800 p-4 rounded-xl hover:bg-blue-800/20"
-              >
-                <info.icon className="text-2xl text-blue-400" />
-                <span className="text-gray-200">{info.value}</span>
-              </a>
-            ))}
-            <div className="mt-8 bg-gray-900 rounded-xl p-4 border border-blue-800 text-blue-400 font-bold">
-              🏆 2nd Prize, Hack-The-Work 2025
+    <section id="contact" className="relative overflow-hidden bg-slate-950 py-24">
+      <Suspense fallback={null}>
+        <ContactScene />
+      </Suspense>
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-slate-950/60 via-slate-900/75 to-slate-950/85" />
+
+      <div className="relative z-10 mx-auto max-w-6xl px-6 lg:px-16">
+        <SectionHeader label="Contact" title="Get In Touch" className="mb-12" />
+        <div className="grid gap-8 md:grid-cols-2">
+          <div className="rounded-2xl border border-slate-700/70 bg-slate-900/70 p-7 backdrop-blur-sm">
+            <h3 className="mb-4 text-2xl font-semibold text-white">Let&apos;s Talk</h3>
+            <p className="mb-6 text-slate-300">
+              I am open to full-time roles, freelance projects, and meaningful collaborations.
+            </p>
+            <div className="flex flex-col gap-3">
+              {contactInfo.map((info) => (
+                <a
+                  key={info.label}
+                  href={info.href}
+                  className="flex items-center gap-4 rounded-xl border border-slate-700 bg-slate-800/70 p-4 transition hover:border-sky-300/50 hover:bg-slate-800"
+                >
+                  <info.icon className="text-xl text-sky-300" />
+                  <span className="text-slate-200">{info.value}</span>
+                </a>
+              ))}
+            </div>
+            <div className="mt-6 rounded-xl border border-sky-800/50 bg-slate-900/80 p-4 text-sm font-medium text-sky-300">
+              Hack-The-Work 2025 — 2nd Prize Winner
             </div>
           </div>
+
           <form
             onSubmit={onSubmit}
-            className="bg-gray-800 rounded-xl p-8 flex flex-col gap-4 shadow"
+            className="rounded-2xl border border-slate-700/70 bg-slate-900/80 p-8 shadow-[0_18px_50px_-35px_rgba(14,165,233,0.55)] backdrop-blur-sm"
           >
             <input
               type="text"
               name="name"
               required
               placeholder="Your Name"
-              className="w-full p-3 bg-gray-900 rounded text-white"
+              className="mb-4 w-full rounded-lg border border-slate-700 bg-slate-950/80 p-3 text-white outline-none transition focus:border-sky-300"
               onChange={onChange}
               value={form.name}
             />
@@ -83,7 +95,7 @@ const Contact = () => {
               name="email"
               required
               placeholder="Your Email"
-              className="w-full p-3 bg-gray-900 rounded text-white"
+              className="mb-4 w-full rounded-lg border border-slate-700 bg-slate-950/80 p-3 text-white outline-none transition focus:border-sky-300"
               onChange={onChange}
               value={form.email}
             />
@@ -92,19 +104,19 @@ const Contact = () => {
               required
               rows={5}
               placeholder="Your Message"
-              className="w-full p-3 bg-gray-900 rounded text-white"
+              className="w-full rounded-lg border border-slate-700 bg-slate-950/80 p-3 text-white outline-none transition focus:border-sky-300"
               onChange={onChange}
               value={form.message}
             ></textarea>
             <button
-              className="px-6 py-3 mt-2 rounded bg-blue-500 text-white font-bold hover:bg-purple-500 transition"
+              className="mt-5 rounded-lg bg-sky-500 px-6 py-3 font-semibold text-slate-950 transition hover:-translate-y-0.5 hover:bg-sky-400"
               type="submit"
             >
               Send Message
             </button>
           </form>
         </div>
-      </div>
+      </div> 
     </section>
   );
 };

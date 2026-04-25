@@ -1,110 +1,78 @@
-import { FiGithub, FiLinkedin, FiMail, FiDownload } from "react-icons/fi";
+import ThreeScene from "./ThreeScene";
 
-const socialLinks = [
-  { icon: FiGithub, link: "https://github.com/Arijeet-Kumar-Das" },
-  { icon: FiLinkedin, link: "https://linkedin.com/in/arijeet-kumar-das" },
-  { icon: FiMail, link: "https://mail.google.com/mail/?view=cm&fs=1&to=dasarijeetkumar@gmail.com" },
-];
+const Hero = () => {
+  return (
+    <section
+      id="home"
+      className="relative h-screen overflow-hidden bg-slate-950 text-slate-100"
+    >
+      {/* 3D Background */}
+      <ThreeScene />
 
-const Hero = () => (
-  <section
-    id="home"
-    className="pt-28 pb-16 min-h-[90vh] flex items-center justify-center relative overflow-hidden bg-gradient-to-br from-gray-900 via-gray-950 to-gray-900"
-  >
-    {/* Background animated shapes */}
-    <div className="absolute top-0 left-0 w-full h-full overflow-hidden">
-      <div className="absolute bg-blue-500 opacity-10 w-72 h-72 rounded-full top-10 left-1/4 animate-blob mix-blend-multiply"></div>
-      <div className="absolute bg-purple-500 opacity-10 w-72 h-72 rounded-full top-1/2 left-2/3 animate-blob animation-delay-4000 mix-blend-multiply"></div>
-      <div className="absolute bg-pink-500 opacity-10 w-72 h-72 rounded-full bottom-0 left-1/3 animate-blob animation-delay-2000 mix-blend-multiply"></div>
-    </div>
+      {/* Overlay layers for depth */}
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-slate-950/70 via-slate-900/40 to-slate-950/85" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_25%_20%,rgba(56,189,248,0.15),transparent_45%),radial-gradient(circle_at_75%_75%,rgba(99,102,241,0.12),transparent_40%)]" />
 
-    <div className="max-w-3xl w-full mx-auto flex flex-col items-center text-center relative z-10">
-      {/* Profile Circle */}
-      <div className="w-32 h-32 rounded-full bg-gradient-to-tr from-blue-500 to-purple-400 flex items-center justify-center text-5xl font-bold text-white shadow-2xl mb-6 border-4 border-blue-800 transform hover:scale-105 transition-transform animate-bounce-slow">
-        AKD
+      {/* Content */}
+      <div className="relative z-10 mx-auto flex h-full w-full max-w-6xl items-center px-6 sm:px-10 lg:px-16 pt-20 sm:pt-28">
+        
+        <div className="w-full max-w-3xl rounded-2xl border border-slate-700/30 bg-slate-900/30 p-8 sm:p-10 backdrop-blur-md shadow-[0_20px_80px_-30px_rgba(56,189,248,0.35)]">
+          <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-slate-600/70 bg-slate-900/60 px-3 py-1 text-xs font-medium text-slate-200 backdrop-blur-sm">
+            <span className="relative inline-flex h-2.5 w-2.5">
+              <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-emerald-400/70" />
+              <span className="relative inline-flex h-2.5 w-2.5 rounded-full bg-emerald-400" />
+            </span>
+            Available for opportunities
+          </div>
+
+          {/* Tag */}
+          <p className="mb-5 text-xs uppercase tracking-[0.25em] text-sky-400/90">
+            Full Stack Developer
+          </p>
+
+          {/* Name */}
+          <h1 className="relative text-4xl font-semibold leading-tight sm:text-5xl lg:text-6xl">
+            <span className="absolute -inset-1 blur-2xl bg-sky-500/10 opacity-40"></span>
+            <span className="relative bg-gradient-to-b from-white to-slate-300 bg-clip-text text-transparent">
+              Arijeet Kumar Das
+            </span>
+          </h1>
+
+          {/* Description */}
+          <p className="mt-6 max-w-2xl text-base leading-relaxed text-slate-300 sm:text-lg">
+            I build scalable web applications with clean architecture and
+            thoughtful user experiences. Focused on performance, clarity, and
+            real-world impact.
+          </p>
+          <div className="mt-6 h-px w-40 bg-gradient-to-r from-sky-300/70 to-transparent" />
+
+          {/* Buttons */}
+          <div className="mt-10 flex flex-wrap items-center gap-4">
+            
+            {/* Primary */}
+            <a
+              href="#projects"
+              className="group relative rounded-lg bg-sky-500 px-6 py-3 text-sm font-semibold text-slate-950 shadow-lg shadow-sky-500/20 transition duration-300 hover:-translate-y-1 hover:bg-sky-400"
+            >
+              <span className="relative z-10">View Projects</span>
+              <span className="absolute inset-0 rounded-lg bg-sky-400 opacity-0 blur-md transition duration-300 group-hover:opacity-40" />
+            </a>
+
+            {/* Secondary */}
+            <a
+              href="#contact"
+              className="rounded-lg border border-slate-600 bg-slate-800/20 px-6 py-3 text-sm font-semibold text-slate-100 transition duration-300 hover:-translate-y-1 hover:border-slate-300 hover:bg-slate-800/60"
+            >
+              Contact
+            </a>
+          </div>
+
+        </div>
       </div>
 
-      {/* Name & Title */}
-      <h1 className="text-4xl md:text-5xl font-extrabold mb-2 text-white opacity-0 animate-fadeIn">
-        Hi, I'm{" "}
-        <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">
-          Arijeet Kumar Das
-        </span>
-      </h1>
-      <p className="text-xl md:text-2xl font-medium text-blue-300 mb-2 opacity-0 animate-fadeIn delay-500">
-        Software Developer
-      </p>
-
-      {/* Description */}
-      <p className="text-gray-200 mb-8 text-center opacity-0 animate-fadeIn delay-1000">
-        MCA Student at B.M.S. College of Engineering with expertise in scalable
-        web apps.
-        <br />
-        Passionate about user experiences and solving complex code problems.
-      </p>
-
-      {/* Buttons */}
-      <div className="flex gap-4 mb-8 flex-wrap justify-center opacity-0 animate-fadeIn delay-1500">
-        <a
-          href="#contact"
-          className="px-6 py-3 rounded bg-blue-500 hover:bg-purple-500 text-white font-bold shadow-lg hover:shadow-xl transition transform hover:-translate-y-1"
-        >
-          Get In Touch
-        </a>
-        <a
-          href="/resume_new.pdf"
-          download="Arijeet_Kumar_Das_CV.pdf"
-          className="px-6 py-3 rounded border border-blue-400 hover:bg-blue-400/20 text-blue-300 font-medium flex gap-2 items-center transition transform hover:-translate-y-1"
-        >
-          <FiDownload />
-          Download CV
-        </a>
-      </div>
-
-      {/* Social Links */}
-      <div className="flex gap-4 opacity-0 animate-fadeIn delay-2000">
-        {socialLinks.map(({ icon: Icon, link }, i) => (
-          <a
-            key={i}
-            href={link}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="p-3 rounded-full bg-gray-800 hover:bg-blue-500 text-blue-300 hover:text-white transition transform hover:scale-110 shadow-md"
-          >
-            <Icon size={22} />
-          </a>
-        ))}
-      </div>
-    </div>
-
-    {/* Tailwind Animations */}
-    <style jsx>{`
-      @keyframes blob {
-        0%, 100% { transform: translate(0px, 0px) scale(1); }
-        33% { transform: translate(30px, -50px) scale(1.1); }
-        66% { transform: translate(-20px, 20px) scale(0.9); }
-      }
-      .animate-blob { animation: blob 8s infinite; }
-      .animation-delay-2000 { animation-delay: 2s; }
-      .animation-delay-4000 { animation-delay: 4s; }
-
-      @keyframes fadeIn {
-        0% { opacity: 0; transform: translateY(20px); }
-        100% { opacity: 1; transform: translateY(0); }
-      }
-      .animate-fadeIn { animation: fadeIn 1s forwards; }
-      .delay-500 { animation-delay: 0.5s; }
-      .delay-1000 { animation-delay: 1s; }
-      .delay-1500 { animation-delay: 1.5s; }
-      .delay-2000 { animation-delay: 2s; }
-
-      @keyframes bounceSlow {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-10px); }
-      }
-      .animate-bounce-slow { animation: bounceSlow 3s infinite; }
-    `}</style>
-  </section>
-);
+      
+    </section>
+  );
+};
 
 export default Hero;

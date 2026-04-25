@@ -1,99 +1,121 @@
 import { FiAward, FiCode, FiUsers } from "react-icons/fi";
+import { lazy, Suspense, useEffect, useRef } from "react";
+import SectionHeader from "./ui/SectionHeader";
+
+const AboutScene = lazy(() => import("./three/AboutScene"));
 
 const stats = [
-  { icon: FiCode, value: "4", label: "Internships" },
-  { icon: FiAward, value: "3+", label: "Projects" },
+  { icon: FiCode, value: "4+", label: "Internships" },
+  { icon: FiAward, value: "5+", label: "Projects" },
   { icon: FiUsers, value: "1", label: "Hackathon" },
 ];
 
-const About = () => (
-  <section id="about" className="py-24 bg-gray-950/90 relative overflow-hidden">
-    {/* Optional animated background blobs */}
-    <div className="absolute top-0 left-0 w-full h-full overflow-hidden">
-      <div className="absolute bg-blue-500 opacity-5 w-72 h-72 rounded-full top-10 left-1/4 animate-blob mix-blend-multiply"></div>
-      <div className="absolute bg-purple-500 opacity-5 w-72 h-72 rounded-full top-1/2 left-2/3 animate-blob animation-delay-4000 mix-blend-multiply"></div>
-    </div>
+const About = () => {
+  const sectionRef = useRef(null);
 
-    <div className="max-w-5xl mx-auto px-4 flex flex-col md:flex-row gap-12 items-center relative z-10">
-      {/* Avatar */}
-      <div className="flex-1 flex items-center justify-center">
-        <div className="rounded-2xl bg-gradient-to-br from-blue-500 via-purple-600 to-indigo-700 h-60 w-60 flex items-center justify-center text-8xl shadow-2xl animate-bounce-slow">
-          👨‍💻
+  useEffect(() => {
+    const node = sectionRef.current;
+    if (!node) return;
+
+    const onScroll = () => {
+      const rect = node.getBoundingClientRect();
+      const offset = Math.max(
+        -20,
+        Math.min(20, (window.innerHeight - rect.top) * 0.02 - 8)
+      );
+      node.style.setProperty("--about-parallax", `${offset}px`);
+    };
+
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []);
+
+  return (
+    <section
+      id="about"
+      ref={sectionRef}
+      className="relative overflow-hidden bg-slate-950 py-24"
+      style={{
+        transform: "translate3d(0, var(--about-parallax, 0px), 0)",
+      }}
+    >
+      {/* subtle background glow */}
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_75%_20%,rgba(56,189,248,0.1),transparent_42%)]" />
+      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(circle_at_20%_85%,rgba(99,102,241,0.08),transparent_38%)]" />
+
+      <div className="relative z-10 mx-auto grid max-w-6xl gap-12 px-6 md:grid-cols-2 md:items-center lg:px-16">
+        {/* LEFT: 3D Scene */}
+        <div className="group relative rounded-2xl border border-slate-800/80 bg-slate-900/55 p-4 shadow-[0_18px_70px_-40px_rgba(56,189,248,0.5)] transition duration-500 hover:border-slate-700">
+          <div className="pointer-events-none absolute inset-0 rounded-2xl bg-gradient-to-br from-sky-400/10 via-transparent to-indigo-400/10 opacity-0 transition duration-500 group-hover:opacity-100" />
+          <Suspense
+            fallback={
+              <div className="h-72 w-full rounded-2xl bg-slate-900/80" />
+            }
+          >
+            <AboutScene />
+          </Suspense>
         </div>
-      </div>
 
-      {/* About Text */}
-      <div className="flex-1 text-left">
-        <h2 className="text-4xl font-extrabold mb-4 text-white opacity-0 animate-fadeIn">
-          About <span className="bg-gradient-to-r from-blue-400 to-purple-400 bg-clip-text text-transparent">Me</span>
-        </h2>
-        <h3 className="text-2xl font-bold mb-2 text-white opacity-0 animate-fadeIn delay-500">
-          Full-Stack Developer & Problem Solver
-        </h3>
-        <p className="text-gray-300 mb-2 opacity-0 animate-fadeIn delay-1000">
-          Currently pursuing MCA at{" "}
-          <span className="font-semibold text-blue-300">
-            B.M.S. College of Engineering
-          </span>
-          , I bring a strong foundation in full-stack development with several internships.
-        </p>
-        <p className="text-gray-300 mb-2 opacity-0 animate-fadeIn delay-1200">
-          Skilled in the{" "}
-          <span className="font-semibold bg-gradient-to-r from-purple-400 to-pink-400 bg-clip-text text-transparent">
-            MERN stack
-          </span>
-          , I've built POS systems and corporate sites. I love creating seamless user experiences and solving problems with code.
-        </p>
-        <p className="text-gray-300 mb-6 opacity-0 animate-fadeIn delay-1400">
-          Recently secured{" "}
-          <span className="font-semibold text-blue-400">2nd prize</span> in
-          Hack-The-Work 2025 hackathon for creative engineering!
-        </p>
+        {/* RIGHT: CONTENT */}
+        <div>
+          <SectionHeader
+            label="About"
+            title="I build full-stack applications that actually scale"
+            align="left"
+          />
 
-        {/* Stats */}
-        <div className="flex gap-4 flex-wrap">
-          {stats.map((stat, i) => (
-            <div
-              key={i}
-              className="flex flex-col items-center bg-gray-900 rounded-xl px-5 py-4 shadow-lg hover:shadow-2xl hover:scale-105 transform transition duration-500"
-            >
-              <stat.icon className="text-blue-400 text-3xl mb-1" />
-              <span className="text-2xl font-bold text-white">{stat.value}</span>
-              <span className="text-xs text-gray-400">{stat.label}</span>
-            </div>
-          ))}
+          {/* intro */}
+          <p className="mt-5 max-w-2xl text-slate-300 leading-relaxed">
+            I'm an MCA student at{" "}
+            <span className="font-semibold text-sky-300">
+              B.M.S. College of Engineering
+            </span>{" "}
+            who enjoys turning ideas into real, usable products — not just demos.
+          </p>
+
+          {/* tech */}
+          <p className="mt-3 max-w-2xl text-slate-300 leading-relaxed">
+            I work mainly with{" "}
+            <span className="text-sky-300 font-medium">
+              React, Node.js, and MySQL
+            </span>{" "}
+            to build full-stack systems with clean architecture and smooth user
+            experience.
+          </p>
+
+          {/* proof */}
+          <p className="mt-3 max-w-2xl text-slate-300 leading-relaxed">
+            Recently, I’ve built projects like a finance tracker, a food delivery
+            platform, and an AI-based HA-RAG system — focusing on performance,
+            scalability, and real-world usability.
+          </p>
+
+          {/* divider */}
+          <div className="mt-6 h-px w-32 bg-gradient-to-r from-sky-400/70 via-indigo-400/40 to-transparent" />
+
+          {/* stats */}
+          <div className="mt-8 grid grid-cols-1 gap-4 sm:grid-cols-3">
+            {stats.map((stat) => (
+              <div
+                key={stat.label}
+                className="group rounded-xl border border-slate-700/70 bg-slate-900/70 px-4 py-5 text-center transition duration-300 hover:-translate-y-1 hover:border-sky-300/40 hover:shadow-[0_18px_40px_-30px_rgba(56,189,248,0.85)]"
+              >
+                <stat.icon className="mx-auto mb-2 text-2xl text-sky-300 transition duration-300 group-hover:scale-110" />
+                <div className="text-xl font-semibold text-white">
+                  {stat.value}
+                </div>
+                <div className="text-xs uppercase tracking-wide text-slate-400">
+                  {stat.label}
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
+
       </div>
-    </div>
-
-    {/* Tailwind Animations */}
-    <style jsx>{`
-      @keyframes blob {
-        0%, 100% { transform: translate(0px, 0px) scale(1); }
-        33% { transform: translate(30px, -50px) scale(1.1); }
-        66% { transform: translate(-20px, 20px) scale(0.9); }
-      }
-      .animate-blob { animation: blob 8s infinite; }
-      .animation-delay-2000 { animation-delay: 2s; }
-      .animation-delay-4000 { animation-delay: 4s; }
-
-      @keyframes fadeIn {
-        0% { opacity: 0; transform: translateY(20px); }
-        100% { opacity: 1; transform: translateY(0); }
-      }
-      .animate-fadeIn { animation: fadeIn 1s forwards; }
-      .delay-500 { animation-delay: 0.5s; }
-      .delay-1000 { animation-delay: 1s; }
-      .delay-1200 { animation-delay: 1.2s; }
-      .delay-1400 { animation-delay: 1.4s; }
-
-      @keyframes bounceSlow {
-        0%, 100% { transform: translateY(0); }
-        50% { transform: translateY(-10px); }
-      }
-      .animate-bounce-slow { animation: bounceSlow 3s infinite; }
-    `}</style>
-  </section>
-);
+    </section>
+  );
+};
 
 export default About;
