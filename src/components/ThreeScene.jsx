@@ -38,6 +38,27 @@ const SHAPES = [
   },
 ];
 
+function FeatureModel() {
+  return (
+    <Float speed={0.9} rotationIntensity={0.2} floatIntensity={0.5}>
+      <group position={[0.4, -0.2, -3.2]} rotation={[0.18, -0.4, 0]}>
+        <mesh position={[0, 0, 0]}>
+          <boxGeometry args={[2.4, 1.45, 0.15]} />
+          <meshStandardMaterial color="#0f172a" roughness={0.62} metalness={0.2} />
+        </mesh>
+        <mesh position={[0, 0, 0.09]}>
+          <planeGeometry args={[2.15, 1.2]} />
+          <meshStandardMaterial color="#0b1220" emissive="#0ea5e9" emissiveIntensity={0.08} />
+        </mesh>
+        <mesh position={[0, -0.85, -0.2]} rotation={[-0.5, 0, 0]}>
+          <boxGeometry args={[2.6, 0.14, 1.15]} />
+          <meshStandardMaterial color="#111827" roughness={0.6} metalness={0.15} />
+        </mesh>
+      </group>
+    </Float>
+  );
+}
+
 function CameraRig() {
   const { camera, pointer } = useThree();
 
@@ -71,10 +92,10 @@ export default function ThreeScene() {
       <Stars
         radius={45}
         depth={22}
-        count={420}
+        count={520}
         factor={1.6}
         saturation={0}
-        speed={0.08}
+        speed={0.12}
         fade
       />
 
@@ -97,14 +118,15 @@ export default function ThreeScene() {
       <pointLight position={[0, 0, 2]} intensity={0.6} color="#38bdf8" />
 
       <CameraRig />
+      <FeatureModel />
 
       {/* Shapes with smooth floating */}
       {SHAPES.map((shape, index) => (
         <Float
           key={index}
-          speed={1}
-          rotationIntensity={0.4}
-          floatIntensity={1}
+          speed={1.2}
+          rotationIntensity={0.45}
+          floatIntensity={1.1}
         >
           <FloatingShape {...shape} />
         </Float>
