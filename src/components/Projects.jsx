@@ -9,7 +9,7 @@ const projects = [
     stack: ["React", "Node.js", "Express", "MongoDB", "Pinecone", "OpenAI"],
     icon: "🧠",
     github: "https://github.com/Arijeet-Kumar-Das/ha-rag-system",
-    demo: "#",
+    demo: "https://ha-rag-system.vercel.app/",
   },
   {
     title: "AI-Powered College Assistant",
@@ -17,7 +17,7 @@ const projects = [
     stack: ["MongoDB", "Express", "React", "Node.js", "JWT", "NLP"],
     icon: "🎓",
     github: "https://github.com/Arijeet-Kumar-Das/AI-Powered-College-assistant-",
-    demo: "#",
+    demo: "https://ai-powered-college-assistant-b3w1-n0tzxu8er.vercel.app/",
   },
   {
     title: "Food Delivery Website",
