@@ -16,7 +16,6 @@ const Hero = () => {
 
       {/* Content */}
       <div className="relative z-10 mx-auto flex h-full w-full max-w-6xl items-center px-6 sm:px-10 lg:px-16 pt-20 sm:pt-28">
-        
         <div className="w-full max-w-3xl rounded-2xl border border-slate-700/30 bg-slate-900/30 p-8 sm:p-10 backdrop-blur-md shadow-[0_20px_80px_-30px_rgba(56,189,248,0.35)] animate-[fadeUp_0.8s_ease-out_forwards]">
           <div className="mb-4 inline-flex items-center gap-2 rounded-full border border-slate-600/70 bg-slate-900/60 px-3 py-1 text-xs font-medium text-slate-200 backdrop-blur-sm">
             <span className="relative inline-flex h-2.5 w-2.5">
@@ -49,7 +48,6 @@ const Hero = () => {
 
           {/* Buttons */}
           <div className="mt-10 flex flex-wrap items-center gap-4">
-            
             {/* Primary */}
             <a
               href="#projects"
@@ -75,17 +73,7 @@ const Hero = () => {
               Download Resume
             </a>
           </div>
-
         </div>
-      </div>
-
-      <div className="pointer-events-none absolute bottom-7 left-1/2 z-10 -translate-x-1/2 text-center">
-        <div className="mx-auto h-9 w-5 rounded-full border border-slate-500/70 bg-slate-900/40 p-1 backdrop-blur-sm">
-          <span className="block h-1.5 w-1.5 rounded-full bg-slate-300 animate-[scrollDot_2s_ease-in-out_infinite]" />
-        </div>
-        <p className="mt-2 text-[10px] uppercase tracking-[0.18em] text-slate-400/90">
-          Explore
-        </p>
       </div>
 
       <style>{`

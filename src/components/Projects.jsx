@@ -16,7 +16,8 @@ const projects = [
     desc: "Built a role-based academic assistant with JWT authentication and NLP-based query classification. Integrated LLM responses with optimized backend APIs to handle structured and conversational queries efficiently.",
     stack: ["MongoDB", "Express", "React", "Node.js", "JWT", "NLP"],
     icon: "🎓",
-    github: "https://github.com/Arijeet-Kumar-Das/AI-Powered-College-assistant-",
+    github:
+      "https://github.com/Arijeet-Kumar-Das/AI-Powered-College-assistant-",
     demo: "https://ai-powered-college-assistant-b3w1-n0tzxu8er.vercel.app/",
   },
   {
@@ -32,7 +33,8 @@ const projects = [
     desc: "Built a POS system handling order lifecycle, inventory, and billing with real-time sales tracking. Optimized for fast counter operations and efficient restaurant workflows.",
     stack: ["React", "Node.js", "Express", "MySQL", "Material UI"],
     icon: "🍽️",
-    github: "https://github.com/Arijeet-Kumar-Das/Restaurant-Point-of-Sale-Management-System",
+    github:
+      "https://github.com/Arijeet-Kumar-Das/Restaurant-Point-of-Sale-Management-System",
     demo: "#",
   },
   {
@@ -47,7 +49,7 @@ const projects = [
 
 const ProjectCard = ({ project, index, featured }) => {
   const [transform, setTransform] = useState(
-    "perspective(1000px) rotateX(0deg) rotateY(0deg)"
+    "perspective(1000px) rotateX(0deg) rotateY(0deg)",
   );
 
   const onMove = (e) => {
@@ -57,7 +59,7 @@ const ProjectCard = ({ project, index, featured }) => {
     const rotateY = (x - 0.5) * 10;
     const rotateX = (0.5 - y) * 8;
     setTransform(
-      `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`
+      `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg)`,
     );
   };
 
@@ -134,14 +136,16 @@ const ProjectCard = ({ project, index, featured }) => {
             <FiGithub />
           </a>
 
-          <a
-            href={project.demo}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="rounded-full border border-slate-600 bg-slate-800 p-2 text-slate-200 transition hover:border-sky-300 hover:text-sky-300"
-          >
-            <FiExternalLink />
-          </a>
+          {project.demo !== "#" && (
+            <a
+              href={project.demo}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="rounded-full border border-slate-600 bg-slate-800 p-2 text-slate-200 transition hover:border-sky-300 hover:text-sky-300"
+            >
+              <FiExternalLink />
+            </a>
+          )}
         </div>
       </div>
 

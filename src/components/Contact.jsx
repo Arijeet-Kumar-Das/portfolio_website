@@ -23,16 +23,15 @@ const contactInfo = [
 const Contact = () => {
   const [form, setForm] = useState({ name: "", email: "", message: "" });
   const onChange = (e) => setForm({ ...form, [e.target.name]: e.target.value });
- const onSubmit = (e) => {
-  e.preventDefault();
+  const onSubmit = (e) => {
+    e.preventDefault();
 
-  // Replace these with your EmailJS values
-  const serviceID = "service_voifais";
-  const templateID = "template_4o016x9";
-  const publicKey = "Rs-bB6GrUMDFkPElR";
+    // Replace these with your EmailJS values
+    const serviceID = "service_voifais";
+    const templateID = "template_4o016x9";
+    const publicKey = "Rs-bB6GrUMDFkPElR";
 
-  emailjs.send(serviceID, templateID, form, publicKey)
-    .then(
+    emailjs.send(serviceID, templateID, form, publicKey).then(
       (result) => {
         alert("Message sent successfully!");
         setForm({ name: "", email: "", message: "" }); // Reset form
@@ -40,13 +39,15 @@ const Contact = () => {
       (error) => {
         alert("Failed to send message. Please try again.");
         console.error(error);
-      }
+      },
     );
-};
-
+  };
 
   return (
-    <section id="contact" className="relative overflow-hidden bg-slate-950 py-24">
+    <section
+      id="contact"
+      className="relative overflow-hidden bg-slate-950 py-24"
+    >
       <Suspense fallback={null}>
         <ContactScene />
       </Suspense>
@@ -56,9 +57,12 @@ const Contact = () => {
         <SectionHeader label="Contact" title="Get In Touch" className="mb-12" />
         <div className="grid gap-8 md:grid-cols-2">
           <div className="rounded-2xl border border-slate-700/70 bg-slate-900/70 p-7 backdrop-blur-sm">
-            <h3 className="mb-4 text-2xl font-semibold text-white">Let&apos;s Talk</h3>
+            <h3 className="mb-4 text-2xl font-semibold text-white">
+              Let&apos;s Talk
+            </h3>
             <p className="mb-6 text-slate-300">
-              I am open to full-time roles, freelance projects, and meaningful collaborations.
+              I am open to full-time roles, freelance projects, and meaningful
+              collaborations.
             </p>
             <div className="flex flex-col gap-3">
               {contactInfo.map((info) => (
@@ -71,9 +75,6 @@ const Contact = () => {
                   <span className="text-slate-200">{info.value}</span>
                 </a>
               ))}
-            </div>
-            <div className="mt-6 rounded-xl border border-sky-800/50 bg-slate-900/80 p-4 text-sm font-medium text-sky-300">
-              Hack-The-Work 2025 — 2nd Prize Winner
             </div>
           </div>
 
@@ -116,7 +117,7 @@ const Contact = () => {
             </button>
           </form>
         </div>
-      </div> 
+      </div>
     </section>
   );
 };
