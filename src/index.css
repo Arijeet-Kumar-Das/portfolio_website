@@ -307,7 +307,9 @@ button {
     linear-gradient(135deg, rgba(255, 180, 84, 0.08), transparent 26%),
     linear-gradient(180deg, rgba(14, 13, 11, 0.92), rgba(5, 5, 4, 0.82));
   box-shadow: 0 1.8rem 5rem var(--shadow);
+  contain: paint;
   pointer-events: auto;
+  will-change: transform, opacity;
 }
 
 .chapter-module::before {
@@ -494,6 +496,7 @@ button {
   border: 1px solid var(--line);
   background: var(--panel);
   box-shadow: 0 1.6rem 4.5rem var(--shadow);
+  contain: paint;
   font-family: "Space Mono", monospace;
 }
 
@@ -655,6 +658,7 @@ button {
   margin-top: 1.45rem;
   border: 1px solid rgba(244, 234, 215, 0.15);
   background: rgba(244, 234, 215, 0.12);
+  contain: paint;
 }
 
 .artifact-index {
@@ -764,6 +768,7 @@ button {
   margin-top: 1.5rem;
   border: 1px solid rgba(244, 234, 215, 0.16);
   background: rgba(244, 234, 215, 0.12);
+  contain: paint;
 }
 
 .contact-manifest,
@@ -914,6 +919,18 @@ button {
 }
 
 @media (max-width: 860px) {
+  .of-shell::before {
+    opacity: 0.12;
+    background-size: 140px 140px;
+  }
+
+  .of-shell::after {
+    opacity: 0.2;
+    background:
+      linear-gradient(90deg, rgba(255, 180, 84, 0.045), transparent 22%, transparent 82%, rgba(183, 65, 34, 0.05));
+    mix-blend-mode: normal;
+  }
+
   .command-nav {
     min-height: 4.5rem;
     padding: 0.8rem;

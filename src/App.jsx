@@ -1,5 +1,5 @@
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { AdaptiveDpr, Float, MeshReflectorMaterial, Sparkles } from "@react-three/drei";
+import { AdaptiveDpr, MeshReflectorMaterial, Sparkles } from "@react-three/drei";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   FiArrowUpRight,
@@ -164,6 +164,46 @@ const contactLinks = [
 
 const smoothstep = (value) => value * value * (3 - 2 * value);
 const dampFactor = (lambda, delta) => 1 - Math.exp(-lambda * delta);
+const clamp = THREE.MathUtils.clamp;
+
+function useRenderProfile() {
+  const [profile, setProfile] = useState({
+    compact: false,
+    reducedMotion: false,
+  });
+
+  useEffect(() => {
+    const compactQuery = window.matchMedia("(max-width: 860px)");
+    const reducedQuery = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    const sync = () => {
+      setProfile({
+        compact: compactQuery.matches,
+        reducedMotion: reducedQuery.matches,
+      });
+    };
+
+    sync();
+    compactQuery.addEventListener("change", sync);
+    reducedQuery.addEventListener("change", sync);
+
+    return () => {
+      compactQuery.removeEventListener("change", sync);
+      reducedQuery.removeEventListener("change", sync);
+    };
+  }, []);
+
+  const lowPower = profile.compact || profile.reducedMotion;
+
+  return {
+    ...profile,
+    lowPower,
+    dpr: lowPower ? [1, 1] : [1, 1.2],
+    particles: lowPower ? 160 : 300,
+    sparkles: lowPower ? 8 : 18,
+    reflectorResolution: lowPower ? 128 : 256,
+  };
+}
 
 function usePageTelemetry(totalChapters) {
   const progressRef = useRef(0);
@@ -174,11 +214,17 @@ function usePageTelemetry(totalChapters) {
   useEffect(() => {
     let frame = 0;
     let lastSnapshot = 0;
+    let scrollMax = 1;
+
+    const updateScrollMax = () => {
+      scrollMax = Math.max(
+        1,
+        document.documentElement.scrollHeight - window.innerHeight,
+      );
+    };
 
     const measure = () => {
-      const scrollMax =
-        document.documentElement.scrollHeight - window.innerHeight;
-      const progress = scrollMax > 0 ? window.scrollY / scrollMax : 0;
+      const progress = clamp(window.scrollY / scrollMax, 0, 1);
       const activeChapter = Math.min(
         totalChapters - 1,
         Math.max(0, Math.round(progress * (totalChapters - 1))),
@@ -195,21 +241,17 @@ function usePageTelemetry(totalChapters) {
         lastSnapshot = progress;
         setProgressSnapshot(progress);
       }
-    };
 
-    const onScroll = () => {
-      cancelAnimationFrame(frame);
       frame = requestAnimationFrame(measure);
     };
 
-    measure();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll);
+    updateScrollMax();
+    frame = requestAnimationFrame(measure);
+    window.addEventListener("resize", updateScrollMax);
 
     return () => {
       cancelAnimationFrame(frame);
-      window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
+      window.removeEventListener("resize", updateScrollMax);
     };
   }, [totalChapters]);
 
@@ -237,6 +279,7 @@ function useCursorSignal() {
 function App() {
   const { activeChapter, progressRef, progressSnapshot } = usePageTelemetry(chapters.length);
   const cursorRef = useCursorSignal();
+  const renderProfile = useRenderProfile();
   const [navOpen, setNavOpen] = useState(false);
   const [selectedProject, setSelectedProject] = useState(0);
 
@@ -250,7 +293,7 @@ function App() {
       <div className="of-canvas" aria-hidden="true">
         <Canvas
           camera={{ position: [0, 1.9, 8], fov: 46, near: 0.1, far: 70 }}
-          dpr={[1, 1.25]}
+          dpr={renderProfile.dpr}
           gl={{
             antialias: true,
             alpha: false,
@@ -263,6 +306,7 @@ function App() {
             activeChapter={activeChapter}
             cursorRef={cursorRef}
             progressRef={progressRef}
+            renderProfile={renderProfile}
             selectedProject={selectedProject}
             setSelectedProject={setSelectedProject}
           />
@@ -356,10 +400,10 @@ function Chapter({ id, marker, eyebrow, title, align = "left", children }) {
     <section className={`chapter chapter-${align}`} id={id}>
       <MotionDiv
         className="chapter-module"
-        initial={{ opacity: 0, y: 42, filter: "blur(10px)" }}
+        initial={{ opacity: 0, y: 34 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         viewport={{ amount: 0.46, once: false }}
-        whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+        whileInView={{ opacity: 1, y: 0 }}
       >
         <div className="chapter-heading">
           <span className="chapter-marker">{marker}</span>
@@ -688,6 +732,7 @@ function OrbitalFoundryScene({
   activeChapter,
   cursorRef,
   progressRef,
+  renderProfile,
   selectedProject,
   setSelectedProject,
 }) {
@@ -698,12 +743,12 @@ function OrbitalFoundryScene({
       <AdaptiveDpr />
       <CameraRig cursorRef={cursorRef} progressRef={progressRef} />
       <SceneLights activeChapter={activeChapter} cursorRef={cursorRef} />
-      <ParticleField count={380} />
-      <FoundryFloor />
+      <ParticleField count={renderProfile.particles} lowPower={renderProfile.lowPower} />
+      <FoundryFloor renderProfile={renderProfile} />
       <group position={[0, -0.18, 0]}>
         <DockingFrame />
         <ReactorCore activeChapter={activeChapter} />
-        <ToolchainSatellites activeChapter={activeChapter} />
+        <ToolchainSatellites activeChapter={activeChapter} lowPower={renderProfile.lowPower} />
         <ProjectCapsules
           selectedProject={selectedProject}
           setSelectedProject={setSelectedProject}
@@ -712,12 +757,12 @@ function OrbitalFoundryScene({
       </group>
       <Sparkles
         color="#ffb454"
-        count={28}
-        noise={0.7}
-        opacity={0.2}
+        count={renderProfile.sparkles}
+        noise={0.42}
+        opacity={renderProfile.lowPower ? 0.12 : 0.17}
         scale={[9, 3, 9]}
-        size={1.6}
-        speed={0.08}
+        size={renderProfile.lowPower ? 1.2 : 1.5}
+        speed={0.035}
       />
     </>
   );
@@ -726,47 +771,71 @@ function OrbitalFoundryScene({
 function CameraRig({ cursorRef, progressRef }) {
   const { camera } = useThree();
   const smoothedProgress = useRef(0);
+  const smoothedCursor = useRef({ x: 0, y: 0 });
   const currentLook = useRef(new THREE.Vector3(0, 0, 0));
   const targetPosition = useRef(new THREE.Vector3());
   const targetLook = useRef(new THREE.Vector3());
 
-  const waypoints = useMemo(
-    () => [
-      { pos: new THREE.Vector3(0, 1.72, 8.65), look: new THREE.Vector3(0, -0.04, 0) },
-      { pos: new THREE.Vector3(3.35, 2.18, 6.55), look: new THREE.Vector3(0.14, 0.02, -0.18) },
-      { pos: new THREE.Vector3(-3.75, 2.32, 6.1), look: new THREE.Vector3(-0.16, 0.02, -0.1) },
-      { pos: new THREE.Vector3(3.0, 1.55, 4.95), look: new THREE.Vector3(0.24, -0.13, -0.2) },
-      { pos: new THREE.Vector3(-2.7, 1.88, 4.7), look: new THREE.Vector3(-0.18, -0.04, 0.02) },
-      { pos: new THREE.Vector3(0.45, 2.62, 7.25), look: new THREE.Vector3(0, 0.1, 0) },
-    ],
-    [],
-  );
+  const cameraPath = useMemo(() => {
+    const positions = [
+      new THREE.Vector3(0, 1.72, 8.65),
+      new THREE.Vector3(3.35, 2.18, 6.55),
+      new THREE.Vector3(-3.75, 2.32, 6.1),
+      new THREE.Vector3(3.0, 1.55, 4.95),
+      new THREE.Vector3(-2.7, 1.88, 4.7),
+      new THREE.Vector3(0.45, 2.62, 7.25),
+    ];
+    const looks = [
+      new THREE.Vector3(0, -0.04, 0),
+      new THREE.Vector3(0.14, 0.02, -0.18),
+      new THREE.Vector3(-0.16, 0.02, -0.1),
+      new THREE.Vector3(0.24, -0.13, -0.2),
+      new THREE.Vector3(-0.18, -0.04, 0.02),
+      new THREE.Vector3(0, 0.1, 0),
+    ];
+
+    return {
+      position: new THREE.CatmullRomCurve3(positions, false, "centripetal", 0.28),
+      look: new THREE.CatmullRomCurve3(looks, false, "centripetal", 0.28),
+    };
+  }, []);
 
   useFrame((state, delta) => {
-    smoothedProgress.current = THREE.MathUtils.lerp(
-      smoothedProgress.current,
-      progressRef.current,
-      dampFactor(2.4, delta),
+    const targetProgress = progressRef.current;
+    const progressDelta = targetProgress - smoothedProgress.current;
+    const unclampedStep = progressDelta * dampFactor(1.9, delta);
+    const maxStep = delta * 0.48;
+    smoothedProgress.current = clamp(
+      smoothedProgress.current + clamp(unclampedStep, -maxStep, maxStep),
+      0,
+      1,
     );
 
-    const scaled = smoothedProgress.current * (waypoints.length - 1);
-    const index = Math.min(waypoints.length - 2, Math.floor(scaled));
-    const local = smoothstep(scaled - index);
-    const from = waypoints[index];
-    const to = waypoints[index + 1];
     const cursor = cursorRef.current;
+    smoothedCursor.current.x = THREE.MathUtils.lerp(
+      smoothedCursor.current.x,
+      cursor.x,
+      dampFactor(2.2, delta),
+    );
+    smoothedCursor.current.y = THREE.MathUtils.lerp(
+      smoothedCursor.current.y,
+      cursor.y,
+      dampFactor(2.2, delta),
+    );
 
-    targetPosition.current.lerpVectors(from.pos, to.pos, local);
-    targetPosition.current.x += cursor.x * 0.16;
-    targetPosition.current.y += cursor.y * 0.09;
-    targetPosition.current.z += Math.sin(state.clock.elapsedTime * 0.12) * 0.05;
+    const cinematicProgress = smoothstep(smoothedProgress.current);
+    cameraPath.position.getPoint(cinematicProgress, targetPosition.current);
+    cameraPath.look.getPoint(cinematicProgress, targetLook.current);
 
-    targetLook.current.lerpVectors(from.look, to.look, local);
-    targetLook.current.x += cursor.x * 0.055;
-    targetLook.current.y += cursor.y * 0.035;
+    targetPosition.current.x += smoothedCursor.current.x * 0.1;
+    targetPosition.current.y += smoothedCursor.current.y * 0.055;
+    targetPosition.current.z += Math.sin(state.clock.elapsedTime * 0.08) * 0.035;
 
-    camera.position.lerp(targetPosition.current, dampFactor(3.15, delta));
-    currentLook.current.lerp(targetLook.current, dampFactor(3.4, delta));
+    targetLook.current.x += smoothedCursor.current.x * 0.036;
+    targetLook.current.y += smoothedCursor.current.y * 0.022;
+
+    camera.position.lerp(targetPosition.current, dampFactor(2.9, delta));
+    currentLook.current.lerp(targetLook.current, dampFactor(3.05, delta));
     camera.lookAt(currentLook.current);
   });
 
@@ -953,12 +1022,13 @@ function DockingFrame() {
   );
 }
 
-function ToolchainSatellites({ activeChapter }) {
+function ToolchainSatellites({ activeChapter, lowPower }) {
   const mesh = useRef(null);
   const dummy = useMemo(() => new THREE.Object3D(), []);
   const satellites = useMemo(() => {
-    return Array.from({ length: 30 }, (_, index) => {
-      const angle = (index / 30) * Math.PI * 2;
+    const total = lowPower ? 18 : 28;
+    return Array.from({ length: total }, (_, index) => {
+      const angle = (index / total) * Math.PI * 2;
       const radius = 2.9 + (index % 7) * 0.13;
       return {
         angle,
@@ -967,9 +1037,11 @@ function ToolchainSatellites({ activeChapter }) {
         size: 0.055 + (index % 4) * 0.008,
       };
     });
-  }, []);
+  }, [lowPower]);
 
   useFrame((state) => {
+    if (!mesh.current) return;
+
     satellites.forEach((satellite, index) => {
       const speed = activeChapter >= 2 ? 0.065 : 0.035;
       const angle = satellite.angle + state.clock.elapsedTime * speed;
@@ -1020,43 +1092,42 @@ function ProjectCapsules({ selectedProject, setSelectedProject }) {
         const active = selectedProject === index;
 
         return (
-          <Float floatIntensity={active ? 0.14 : 0.06} key={project.title} rotationIntensity={active ? 0.055 : 0.025} speed={active ? 0.42 : 0.28}>
-            <group
-              onClick={(event) => {
-                event.stopPropagation();
-                setSelectedProject(index);
-              }}
-              onPointerOut={() => setHovered(null)}
-              onPointerOver={(event) => {
-                event.stopPropagation();
-                setHovered(index);
-              }}
-              position={[Math.cos(angle) * radius, 0.38 + (index % 2) * 0.18, Math.sin(angle) * radius]}
-              rotation={[0, -angle + Math.PI / 2, 0]}
-              scale={active ? 1.22 : 1}
-            >
-              <mesh>
-                <octahedronGeometry args={[0.34, 0]} />
-                <meshStandardMaterial
-                  color={active ? "#ffb454" : "#8c7b66"}
-                  emissive={active ? "#b74122" : "#1a0d07"}
-                  emissiveIntensity={active ? 1.45 : 0.35}
-                  metalness={0.88}
-                  roughness={0.18}
-                />
-              </mesh>
-              <mesh position={[0, -0.42, 0]}>
-                <boxGeometry args={[0.92, 0.045, 0.28]} />
-                <meshStandardMaterial
-                  color={active ? "#f4ead7" : "#332d26"}
-                  emissive={active ? "#ffb454" : "#20120b"}
-                  emissiveIntensity={active ? 0.72 : 0.18}
-                  metalness={0.76}
-                  roughness={0.3}
-                />
-              </mesh>
-            </group>
-          </Float>
+          <group
+            key={project.title}
+            onClick={(event) => {
+              event.stopPropagation();
+              setSelectedProject(index);
+            }}
+            onPointerOut={() => setHovered(null)}
+            onPointerOver={(event) => {
+              event.stopPropagation();
+              setHovered(index);
+            }}
+            position={[Math.cos(angle) * radius, 0.38 + (index % 2) * 0.18, Math.sin(angle) * radius]}
+            rotation={[0, -angle + Math.PI / 2, 0]}
+            scale={active ? 1.18 : 1}
+          >
+            <mesh>
+              <octahedronGeometry args={[0.34, 0]} />
+              <meshStandardMaterial
+                color={active ? "#ffb454" : "#8c7b66"}
+                emissive={active ? "#b74122" : "#1a0d07"}
+                emissiveIntensity={active ? 1.18 : 0.28}
+                metalness={0.88}
+                roughness={0.2}
+              />
+            </mesh>
+            <mesh position={[0, -0.42, 0]}>
+              <boxGeometry args={[0.92, 0.045, 0.28]} />
+              <meshStandardMaterial
+                color={active ? "#f4ead7" : "#332d26"}
+                emissive={active ? "#ffb454" : "#20120b"}
+                emissiveIntensity={active ? 0.52 : 0.14}
+                metalness={0.76}
+                roughness={0.32}
+              />
+            </mesh>
+          </group>
         );
       })}
     </group>
@@ -1092,26 +1163,34 @@ function HologramStack({ activeChapter }) {
   );
 }
 
-function FoundryFloor() {
+function FoundryFloor({ renderProfile }) {
   return (
-    <mesh position={[0, -1.34, 0]} receiveShadow rotation={[-Math.PI / 2, 0, 0]}>
+    <mesh position={[0, -1.34, 0]} rotation={[-Math.PI / 2, 0, 0]}>
       <circleGeometry args={[10.5, 64]} />
-      <MeshReflectorMaterial
-        blur={[280, 90]}
-        color="#090806"
-        depthScale={0.12}
-        metalness={0.72}
-        mirror={0.1}
-        mixBlur={0.85}
-        mixStrength={0.36}
-        resolution={256}
-        roughness={0.42}
-      />
+      {renderProfile.lowPower ? (
+        <meshStandardMaterial
+          color="#090806"
+          metalness={0.48}
+          roughness={0.58}
+        />
+      ) : (
+        <MeshReflectorMaterial
+          blur={[220, 80]}
+          color="#090806"
+          depthScale={0.1}
+          metalness={0.7}
+          mirror={0.08}
+          mixBlur={0.72}
+          mixStrength={0.28}
+          resolution={renderProfile.reflectorResolution}
+          roughness={0.46}
+        />
+      )}
     </mesh>
   );
 }
 
-function ParticleField({ count }) {
+function ParticleField({ count, lowPower }) {
   const points = useRef(null);
   const geometry = useMemo(() => {
     const positions = new Float32Array(count * 3);
@@ -1120,7 +1199,7 @@ function ParticleField({ count }) {
     const graphite = new THREE.Color("#5c544a");
 
     for (let index = 0; index < count; index += 1) {
-      const radius = 5 + Math.random() * 12;
+      const radius = 5.5 + Math.random() * 12;
       const angle = Math.random() * Math.PI * 2;
       const height = (Math.random() - 0.5) * 6;
       positions[index * 3] = Math.cos(angle) * radius;
@@ -1141,14 +1220,20 @@ function ParticleField({ count }) {
 
   useFrame((state, delta) => {
     if (points.current) {
-      points.current.rotation.y -= delta * 0.006;
-      points.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.035) * 0.025;
+      points.current.rotation.y -= delta * (lowPower ? 0.0025 : 0.005);
+      points.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.025) * (lowPower ? 0.012 : 0.02);
     }
   });
 
   return (
     <points geometry={geometry} ref={points}>
-      <pointsMaterial size={0.025} transparent opacity={0.72} vertexColors depthWrite={false} />
+      <pointsMaterial
+        depthWrite={false}
+        opacity={lowPower ? 0.38 : 0.56}
+        size={lowPower ? 0.018 : 0.022}
+        transparent
+        vertexColors
+      />
     </points>
   );
 }
