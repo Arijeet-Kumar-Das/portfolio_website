@@ -1,5 +1,9 @@
 import { Canvas, useFrame, useThree } from "@react-three/fiber";
-import { AdaptiveDpr, MeshReflectorMaterial, Sparkles } from "@react-three/drei";
+import {
+  AdaptiveDpr,
+  MeshReflectorMaterial,
+  Sparkles,
+} from "@react-three/drei";
 import { AnimatePresence, motion } from "framer-motion";
 import {
   FiArrowUpRight,
@@ -40,7 +44,14 @@ const metrics = [
 const skillGroups = [
   {
     title: "Interface systems",
-    items: ["React", "JavaScript", "HTML5", "CSS3", "Tailwind CSS", "Material UI"],
+    items: [
+      "React",
+      "JavaScript",
+      "HTML5",
+      "CSS3",
+      "Tailwind CSS",
+      "Material UI",
+    ],
   },
   {
     title: "Service layer",
@@ -98,8 +109,7 @@ const projects = [
   {
     title: "Hybrid RAG Document QA",
     type: "AI retrieval system",
-    desc:
-      "A full-stack PDF intelligence system using hybrid retrieval, Pinecone embeddings, and OpenAI generation with fast and verified response modes.",
+    desc: "A full-stack PDF intelligence system using hybrid retrieval, Pinecone embeddings, and OpenAI generation with fast and verified response modes.",
     stack: ["React", "Node.js", "Express", "MongoDB", "Pinecone", "OpenAI"],
     github: "https://github.com/Arijeet-Kumar-Das/ha-rag-system",
     demo: "https://ha-rag-system.vercel.app/",
@@ -107,8 +117,7 @@ const projects = [
   {
     title: "AI College Assistant",
     type: "Academic operations AI",
-    desc:
-      "A role-based academic assistant with JWT authentication, NLP query classification, and optimized backend APIs for structured and conversational requests.",
+    desc: "A role-based academic assistant with JWT authentication, NLP query classification, and optimized backend APIs for structured and conversational requests.",
     stack: ["MongoDB", "Express", "React", "Node.js", "JWT", "NLP"],
     github:
       "https://github.com/Arijeet-Kumar-Das/AI-Powered-College-assistant-",
@@ -117,8 +126,7 @@ const projects = [
   {
     title: "Food Delivery Platform",
     type: "Commerce workflow",
-    desc:
-      "A full-stack delivery platform with customer, admin, and delivery-partner flows, order tracking, and Razorpay payment integration.",
+    desc: "A full-stack delivery platform with customer, admin, and delivery-partner flows, order tracking, and Razorpay payment integration.",
     stack: ["React", "Node.js", "Express", "MySQL", "Razorpay"],
     github: "https://github.com/Arijeet-Kumar-Das/Food_Delivery_FreshSalads",
     demo: "",
@@ -126,8 +134,7 @@ const projects = [
   {
     title: "Restaurant POS System",
     type: "Operations console",
-    desc:
-      "A counter-speed POS system for order lifecycle, inventory, billing, and real-time sales visibility.",
+    desc: "A counter-speed POS system for order lifecycle, inventory, billing, and real-time sales visibility.",
     stack: ["React", "Node.js", "Express", "MySQL", "Material UI"],
     github:
       "https://github.com/Arijeet-Kumar-Das/Restaurant-Point-of-Sale-Management-System",
@@ -136,8 +143,7 @@ const projects = [
   {
     title: "Insight Brandcom",
     type: "Production website",
-    desc:
-      "A responsive corporate website with reusable UI components, improved performance, and a cleaner production content structure.",
+    desc: "A responsive corporate website with reusable UI components, improved performance, and a cleaner production content structure.",
     stack: ["React", "Material UI", "Responsive Design"],
     github: "https://github.com/Arijeet-Kumar-Das/Insight-BrandCom",
     demo: "https://insightbrandcom.com/",
@@ -157,7 +163,7 @@ const contactLinks = [
   },
   {
     label: "Email",
-    href: "mailto:dasarijeetkumar@gmail.com",
+    href: "https://mail.google.com/mail/?view=cm&fs=1&to=dasarijeetkumar@gmail.com",
     Icon: FiMail,
   },
 ];
@@ -277,7 +283,9 @@ function useCursorSignal() {
 }
 
 function App() {
-  const { activeChapter, progressRef, progressSnapshot } = usePageTelemetry(chapters.length);
+  const { activeChapter, progressRef, progressSnapshot } = usePageTelemetry(
+    chapters.length,
+  );
   const cursorRef = useCursorSignal();
   const renderProfile = useRenderProfile();
   const [navOpen, setNavOpen] = useState(false);
@@ -320,7 +328,11 @@ function App() {
         setNavOpen={setNavOpen}
       />
 
-      <ChapterRail activeChapter={activeChapter} progress={progressSnapshot} jumpTo={jumpTo} />
+      <ChapterRail
+        activeChapter={activeChapter}
+        progress={progressSnapshot}
+        jumpTo={jumpTo}
+      />
 
       <main className="of-story">
         <LaunchBay />
@@ -340,7 +352,11 @@ function App() {
 function CommandNav({ activeChapter, jumpTo, navOpen, setNavOpen }) {
   return (
     <header className={`command-nav ${navOpen ? "is-open" : ""}`}>
-      <button className="brand-mark" type="button" onClick={() => jumpTo("launch")}>
+      <button
+        className="brand-mark"
+        type="button"
+        onClick={() => jumpTo("launch")}
+      >
         <span className="brand-core">AKD</span>
         <span className="brand-sub">Orbital Foundry</span>
       </button>
@@ -376,7 +392,11 @@ function CommandNav({ activeChapter, jumpTo, navOpen, setNavOpen }) {
 function ChapterRail({ activeChapter, progress, jumpTo }) {
   return (
     <aside className="chapter-rail" aria-label="Story position">
-      <span className="rail-readout">{Math.round(progress * 100).toString().padStart(2, "0")}</span>
+      <span className="rail-readout">
+        {Math.round(progress * 100)
+          .toString()
+          .padStart(2, "0")}
+      </span>
       <div className="rail-track">
         <span style={{ height: `${progress * 100}%` }} />
       </div>
@@ -429,7 +449,9 @@ function LaunchBay() {
           <span />
           Available for opportunities
         </div>
-        <p className="launch-kicker">Full-stack developer // creative systems builder</p>
+        <p className="launch-kicker">
+          Full-stack developer // creative systems builder
+        </p>
         <h1>Arijeet Kumar Das</h1>
         <p className="launch-intro">
           I build production-minded web systems with the instincts of a frontend
@@ -440,7 +462,11 @@ function LaunchBay() {
             Artifact vault
             <FiArrowUpRight />
           </a>
-          <a className="secondary-action" href="/resume_new.pdf" download="Arijeet_Kumar_Das_Resume.pdf">
+          <a
+            className="secondary-action"
+            href="/resume_new.pdf"
+            download="Arijeet_Kumar_Das_Resume.pdf"
+          >
             <FiDownload />
             Resume
           </a>
@@ -475,9 +501,9 @@ function OperatorDeck() {
     >
       <p className="chapter-copy">
         I am an MCA student at B.M.S. College of Engineering who turns rough
-        ideas into usable systems. My work sits between frontend craft,
-        backend reliability, and the practical decisions that make a product
-        feel ready for real people.
+        ideas into usable systems. My work sits between frontend craft, backend
+        reliability, and the practical decisions that make a product feel ready
+        for real people.
       </p>
       <div className="metric-array">
         {metrics.map((metric) => (
@@ -599,12 +625,20 @@ function ArtifactVault({ selectedProject, setSelectedProject }) {
               ))}
             </div>
             <div className="artifact-links">
-              <a href={project.github} target="_blank" rel="noopener noreferrer">
+              <a
+                href={project.github}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
                 <FiGithub />
                 Source
               </a>
               {project.demo ? (
-                <a href={project.demo} target="_blank" rel="noopener noreferrer">
+                <a
+                  href={project.demo}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
                   <FiExternalLink />
                   Live
                 </a>
@@ -622,7 +656,10 @@ function SignalDock() {
   const [status, setStatus] = useState("idle");
 
   const onChange = (event) => {
-    setForm((current) => ({ ...current, [event.target.name]: event.target.value }));
+    setForm((current) => ({
+      ...current,
+      [event.target.name]: event.target.value,
+    }));
   };
 
   const onSubmit = async (event) => {
@@ -654,7 +691,11 @@ function SignalDock() {
     >
       <div className="signal-grid">
         <div className="contact-manifest">
-          <a href="mailto:dasarijeetkumar@gmail.com">
+          <a
+            href="https://mail.google.com/mail/?view=cm&fs=1&to=dasarijeetkumar@gmail.com"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <FiMail />
             dasarijeetkumar@gmail.com
           </a>
@@ -670,7 +711,13 @@ function SignalDock() {
             {contactLinks.map(({ Icon, href, label }) => {
               const SocialIcon = Icon;
               return (
-                <a href={href} key={label} rel="noopener noreferrer" target="_blank" aria-label={label}>
+                <a
+                  href={href}
+                  key={label}
+                  rel="noopener noreferrer"
+                  target="_blank"
+                  aria-label={label}
+                >
                   <SocialIcon />
                 </a>
               );
@@ -743,12 +790,18 @@ function OrbitalFoundryScene({
       <AdaptiveDpr />
       <CameraRig cursorRef={cursorRef} progressRef={progressRef} />
       <SceneLights activeChapter={activeChapter} cursorRef={cursorRef} />
-      <ParticleField count={renderProfile.particles} lowPower={renderProfile.lowPower} />
+      <ParticleField
+        count={renderProfile.particles}
+        lowPower={renderProfile.lowPower}
+      />
       <FoundryFloor renderProfile={renderProfile} />
       <group position={[0, -0.18, 0]}>
         <DockingFrame />
         <ReactorCore activeChapter={activeChapter} />
-        <ToolchainSatellites activeChapter={activeChapter} lowPower={renderProfile.lowPower} />
+        <ToolchainSatellites
+          activeChapter={activeChapter}
+          lowPower={renderProfile.lowPower}
+        />
         <ProjectCapsules
           selectedProject={selectedProject}
           setSelectedProject={setSelectedProject}
@@ -795,7 +848,12 @@ function CameraRig({ cursorRef, progressRef }) {
     ];
 
     return {
-      position: new THREE.CatmullRomCurve3(positions, false, "centripetal", 0.28),
+      position: new THREE.CatmullRomCurve3(
+        positions,
+        false,
+        "centripetal",
+        0.28,
+      ),
       look: new THREE.CatmullRomCurve3(looks, false, "centripetal", 0.28),
     };
   }, []);
@@ -829,7 +887,8 @@ function CameraRig({ cursorRef, progressRef }) {
 
     targetPosition.current.x += smoothedCursor.current.x * 0.1;
     targetPosition.current.y += smoothedCursor.current.y * 0.055;
-    targetPosition.current.z += Math.sin(state.clock.elapsedTime * 0.08) * 0.035;
+    targetPosition.current.z +=
+      Math.sin(state.clock.elapsedTime * 0.08) * 0.035;
 
     targetLook.current.x += smoothedCursor.current.x * 0.036;
     targetLook.current.y += smoothedCursor.current.y * 0.022;
@@ -882,8 +941,19 @@ function SceneLights({ activeChapter, cursorRef }) {
         position={[-5.5, 5.8, 4]}
         ref={keyLight}
       />
-      <pointLight color="#ffb454" distance={12} intensity={2.4} position={[0, 0.2, 0]} ref={beacon} />
-      <pointLight color="#b74122" distance={10} intensity={1.1} position={[3.5, -0.8, -2]} />
+      <pointLight
+        color="#ffb454"
+        distance={12}
+        intensity={2.4}
+        position={[0, 0.2, 0]}
+        ref={beacon}
+      />
+      <pointLight
+        color="#b74122"
+        distance={10}
+        intensity={1.1}
+        position={[3.5, -0.8, -2]}
+      />
       <spotLight
         angle={0.4}
         color="#f4ead7"
@@ -971,15 +1041,33 @@ function ReactorCore({ activeChapter }) {
 
       <mesh ref={ringA} rotation={[Math.PI / 2, 0, 0]}>
         <torusGeometry args={[1.38, 0.018, 8, 144]} />
-        <meshStandardMaterial color="#ffb454" emissive="#9a3e18" emissiveIntensity={1.15} metalness={0.75} roughness={0.24} />
+        <meshStandardMaterial
+          color="#ffb454"
+          emissive="#9a3e18"
+          emissiveIntensity={1.15}
+          metalness={0.75}
+          roughness={0.24}
+        />
       </mesh>
       <mesh ref={ringB} rotation={[0.82, 0.42, 0]}>
         <torusGeometry args={[1.72, 0.012, 8, 144]} />
-        <meshStandardMaterial color="#f4ead7" emissive="#ffb454" emissiveIntensity={0.42} metalness={0.8} roughness={0.2} />
+        <meshStandardMaterial
+          color="#f4ead7"
+          emissive="#ffb454"
+          emissiveIntensity={0.42}
+          metalness={0.8}
+          roughness={0.2}
+        />
       </mesh>
       <mesh ref={ringC} rotation={[0.2, 1.1, 0.38]}>
         <torusGeometry args={[2.12, 0.01, 8, 144]} />
-        <meshStandardMaterial color="#6b6256" emissive="#b74122" emissiveIntensity={0.24} metalness={0.9} roughness={0.36} />
+        <meshStandardMaterial
+          color="#6b6256"
+          emissive="#b74122"
+          emissiveIntensity={0.24}
+          metalness={0.9}
+          roughness={0.36}
+        />
       </mesh>
     </group>
   );
@@ -990,18 +1078,43 @@ function DockingFrame() {
 
   useFrame((state) => {
     if (frame.current) {
-      frame.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.08) * 0.08;
+      frame.current.rotation.y =
+        Math.sin(state.clock.elapsedTime * 0.08) * 0.08;
     }
   });
 
   const beams = useMemo(
     () => [
-      { position: [0, -1.08, 0], scale: [5.2, 0.04, 0.06], rotation: [0, 0, 0] },
-      { position: [0, -1.08, 0], scale: [0.06, 0.04, 5.2], rotation: [0, 0, 0] },
-      { position: [2.6, -0.38, 0], scale: [0.05, 1.42, 0.05], rotation: [0, 0, 0] },
-      { position: [-2.6, -0.38, 0], scale: [0.05, 1.42, 0.05], rotation: [0, 0, 0] },
-      { position: [0, -0.38, 2.6], scale: [0.05, 1.42, 0.05], rotation: [0, 0, 0] },
-      { position: [0, -0.38, -2.6], scale: [0.05, 1.42, 0.05], rotation: [0, 0, 0] },
+      {
+        position: [0, -1.08, 0],
+        scale: [5.2, 0.04, 0.06],
+        rotation: [0, 0, 0],
+      },
+      {
+        position: [0, -1.08, 0],
+        scale: [0.06, 0.04, 5.2],
+        rotation: [0, 0, 0],
+      },
+      {
+        position: [2.6, -0.38, 0],
+        scale: [0.05, 1.42, 0.05],
+        rotation: [0, 0, 0],
+      },
+      {
+        position: [-2.6, -0.38, 0],
+        scale: [0.05, 1.42, 0.05],
+        rotation: [0, 0, 0],
+      },
+      {
+        position: [0, -0.38, 2.6],
+        scale: [0.05, 1.42, 0.05],
+        rotation: [0, 0, 0],
+      },
+      {
+        position: [0, -0.38, -2.6],
+        scale: [0.05, 1.42, 0.05],
+        rotation: [0, 0, 0],
+      },
     ],
     [],
   );
@@ -1009,14 +1122,31 @@ function DockingFrame() {
   return (
     <group ref={frame}>
       {beams.map((beam, index) => (
-        <mesh key={index} position={beam.position} rotation={beam.rotation} scale={beam.scale}>
+        <mesh
+          key={index}
+          position={beam.position}
+          rotation={beam.rotation}
+          scale={beam.scale}
+        >
           <boxGeometry args={[1, 1, 1]} />
-          <meshStandardMaterial color="#2a2621" emissive="#2a1208" emissiveIntensity={0.24} metalness={0.88} roughness={0.34} />
+          <meshStandardMaterial
+            color="#2a2621"
+            emissive="#2a1208"
+            emissiveIntensity={0.24}
+            metalness={0.88}
+            roughness={0.34}
+          />
         </mesh>
       ))}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -1.06, 0]}>
         <torusGeometry args={[2.6, 0.012, 8, 160]} />
-        <meshStandardMaterial color="#9a7350" emissive="#b74122" emissiveIntensity={0.42} metalness={0.92} roughness={0.25} />
+        <meshStandardMaterial
+          color="#9a7350"
+          emissive="#b74122"
+          emissiveIntensity={0.42}
+          metalness={0.92}
+          roughness={0.25}
+        />
       </mesh>
     </group>
   );
@@ -1061,7 +1191,13 @@ function ToolchainSatellites({ activeChapter, lowPower }) {
   return (
     <instancedMesh args={[null, null, satellites.length]} ref={mesh}>
       <boxGeometry args={[1, 1, 1]} />
-      <meshStandardMaterial color="#d4c4ad" emissive="#ffb454" emissiveIntensity={activeChapter >= 2 ? 0.34 : 0.12} metalness={0.74} roughness={0.28} />
+      <meshStandardMaterial
+        color="#d4c4ad"
+        emissive="#ffb454"
+        emissiveIntensity={activeChapter >= 2 ? 0.34 : 0.12}
+        metalness={0.74}
+        roughness={0.28}
+      />
     </instancedMesh>
   );
 }
@@ -1080,7 +1216,8 @@ function ProjectCapsules({ selectedProject, setSelectedProject }) {
   useFrame((state, delta) => {
     if (orbit.current) {
       orbit.current.rotation.y += delta * 0.015;
-      orbit.current.position.y = Math.sin(state.clock.elapsedTime * 0.16) * 0.035;
+      orbit.current.position.y =
+        Math.sin(state.clock.elapsedTime * 0.16) * 0.035;
     }
   });
 
@@ -1103,7 +1240,11 @@ function ProjectCapsules({ selectedProject, setSelectedProject }) {
               event.stopPropagation();
               setHovered(index);
             }}
-            position={[Math.cos(angle) * radius, 0.38 + (index % 2) * 0.18, Math.sin(angle) * radius]}
+            position={[
+              Math.cos(angle) * radius,
+              0.38 + (index % 2) * 0.18,
+              Math.sin(angle) * radius,
+            ]}
             rotation={[0, -angle + Math.PI / 2, 0]}
             scale={active ? 1.18 : 1}
           >
@@ -1139,7 +1280,8 @@ function HologramStack({ activeChapter }) {
 
   useFrame((state) => {
     if (group.current) {
-      group.current.rotation.y = -0.35 + Math.sin(state.clock.elapsedTime * 0.1) * 0.035;
+      group.current.rotation.y =
+        -0.35 + Math.sin(state.clock.elapsedTime * 0.1) * 0.035;
       group.current.position.y = 0.16 + activeChapter * 0.012;
     }
   });
@@ -1147,7 +1289,11 @@ function HologramStack({ activeChapter }) {
   return (
     <group position={[-2.9, 0.15, -1.7]} ref={group}>
       {[0, 1, 2, 3].map((item) => (
-        <mesh key={item} position={[0, item * 0.34, item * -0.08]} rotation={[0, 0.18, 0]}>
+        <mesh
+          key={item}
+          position={[0, item * 0.34, item * -0.08]}
+          rotation={[0, 0.18, 0]}
+        >
           <planeGeometry args={[1.42 - item * 0.12, 0.18]} />
           <meshStandardMaterial
             color="#ffdfb0"
@@ -1221,7 +1367,8 @@ function ParticleField({ count, lowPower }) {
   useFrame((state, delta) => {
     if (points.current) {
       points.current.rotation.y -= delta * (lowPower ? 0.0025 : 0.005);
-      points.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.025) * (lowPower ? 0.012 : 0.02);
+      points.current.rotation.x =
+        Math.sin(state.clock.elapsedTime * 0.025) * (lowPower ? 0.012 : 0.02);
     }
   });
 
