@@ -32,7 +32,7 @@ const Contact = () => {
     const publicKey = "Rs-bB6GrUMDFkPElR";
 
     emailjs.send(serviceID, templateID, form, publicKey).then(
-      (result) => {
+      () => {
         alert("Message sent successfully!");
         setForm({ name: "", email: "", message: "" }); // Reset form
       },
